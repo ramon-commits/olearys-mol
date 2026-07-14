@@ -291,10 +291,10 @@ function LiveGame({ overview, reload, onBack, navigate }) {
           const v = votes(n);
           const complete = registered > 0 && v >= registered;
           return (
-            <div key={n} style={{ ...st.card, borderColor: complete ? 'var(--teal)' : 'var(--border)' }}>
+            <div key={n} style={{ ...st.card, borderColor: complete ? 'var(--yellow)' : 'var(--border)' }}>
               <div style={st.cardLabel}>Check-in {n}</div>
               <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginTop: 6 }}>
-                <span style={{ fontFamily: 'var(--font-head)', fontSize: 30, fontWeight: 700, color: complete ? 'var(--teal)' : 'var(--text)', lineHeight: 1 }}>
+                <span style={{ fontFamily: 'var(--font-head)', fontSize: 30, fontWeight: 700, color: 'var(--text)', lineHeight: 1 }}>
                   {v}
                 </span>
                 <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>van {registered}</span>
@@ -372,9 +372,9 @@ function LiveGame({ overview, reload, onBack, navigate }) {
 // ============================================================
 function badgeFor(game) {
   if (game.status === 'finished') return { text: 'Afgerond', bg: 'var(--surface-2)', fg: 'var(--text-muted)' };
-  if (game.active_phase === 0) return { text: 'Registratie', bg: 'var(--teal-soft)', fg: 'var(--teal)' };
-  if (game.active_phase === 5) return { text: 'Scores', bg: 'var(--yellow-soft)', fg: '#8a6d00' };
-  return { text: 'Check-ins', bg: 'var(--teal-soft)', fg: 'var(--teal)' };
+  if (game.active_phase === 0) return { text: 'Registratie', bg: 'var(--yellow-tint)', fg: 'var(--black)' };
+  if (game.active_phase === 5) return { text: 'Scores', bg: 'var(--black)', fg: 'var(--yellow)' };
+  return { text: 'Check-ins', bg: 'var(--yellow)', fg: 'var(--black)' };
 }
 
 function formatDate(iso) {
@@ -478,7 +478,7 @@ const st = {
     fontSize: 14, padding: '7px 0', borderBottom: '1px solid var(--border)',
   },
   moleTag: {
-    fontSize: 10, fontWeight: 800, color: '#000', background: 'var(--yellow)',
+    fontSize: 10, fontWeight: 800, color: 'var(--yellow)', background: 'var(--black)',
     padding: '2px 8px', borderRadius: 99, letterSpacing: '0.06em',
   },
   iconBtn: {

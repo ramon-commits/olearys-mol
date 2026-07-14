@@ -21,7 +21,8 @@
   --text-muted: #6b7280;
 
   --teal-soft:   rgba(46, 107, 90, 0.10);
-  --yellow-soft: rgba(250, 204, 21, 0.22);
+  --yellow-soft: rgba(250, 204, 21, 0.20);
+  --yellow-deep: #8a6d00;   /* leesbaar geel voor tekst op wit */
   --danger:      #c1272d;
   --danger-soft: #fdf0f0;
 
@@ -58,19 +59,19 @@ button {
   cursor: pointer;
   border: none;
   border-radius: var(--radius);
-  background: var(--teal);
-  color: var(--white);
-  font-weight: 600;
+  background: var(--yellow);
+  color: var(--black);
+  font-weight: 700;
   font-size: 0.95rem;
   padding: 0.65rem 1.2rem;
   transition: filter 0.15s ease, opacity 0.15s ease;
 }
-button:hover:not(:disabled) { filter: brightness(1.1); }
+button:hover:not(:disabled) { filter: brightness(0.94); }
 button:disabled { opacity: 0.45; cursor: not-allowed; }
 button:focus-visible,
 input:focus-visible,
 select:focus-visible {
-  outline: 2px solid var(--teal);
+  outline: 2px solid var(--black);
   outline-offset: 2px;
 }
 
@@ -86,8 +87,8 @@ input, select {
 }
 input:focus, select:focus {
   outline: none;
-  border-color: var(--teal);
-  box-shadow: 0 0 0 3px var(--teal-soft);
+  border-color: var(--yellow);
+  box-shadow: 0 0 0 3px var(--yellow-soft);
 }
 input::placeholder { color: #9ca3af; }
 

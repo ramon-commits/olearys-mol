@@ -113,10 +113,10 @@ const s = {
     textAlign: 'left',
   },
   navItemActive: {
-    background: 'var(--teal-soft)',
-    color: 'var(--teal)',
-    fontWeight: 600,
-    boxShadow: 'inset 2px 0 0 var(--teal)',
+    background: 'var(--yellow-soft)',
+    color: 'var(--text)',
+    fontWeight: 700,
+    boxShadow: 'inset 3px 0 0 var(--yellow)',
   },
   footer: { borderTop: '1px solid var(--border)', paddingTop: 14 },
   email: {

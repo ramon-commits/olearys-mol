@@ -119,7 +119,7 @@ const PRINT_CSS = `
 .qr-label {
   font-family: var(--font-head);
   font-size: 13px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
-  color: var(--teal); margin: 30px 0 14px;
+  color: var(--text); margin: 30px 0 14px;
 }
 .qr-grid { display: grid; gap: 16px; }
 .qr-grid-3 { grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); }
@@ -128,7 +128,7 @@ const PRINT_CSS = `
   background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
   padding: 16px; text-align: center; color: var(--text);
 }
-.qr-cell-checkin { box-shadow: inset 0 0 0 3px #2e6b5a; }
+.qr-cell-checkin { box-shadow: inset 0 0 0 3px #facc15; }
 .qr-img { width: 100%; max-width: 190px; height: auto; display: block; margin: 0 auto; }
 .qr-caption { font-family: var(--font-head); font-size: 20px; font-weight: 700; margin-top: 8px; }
 .qr-url { font-size: 10px; color: #6b7280; margin-top: 4px; word-break: break-all; }

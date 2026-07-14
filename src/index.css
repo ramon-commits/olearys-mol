@@ -1,7 +1,8 @@
 /* ============================================================
-   I mol O'Learys - design tokens
-   Facilitator-schermen (login, dashboard, QR) draaien op deze tokens.
-   Deelnemerschermen hebben een eigen palet: src/theme/participant.js
+   I mol O'Learys - facilitator design tokens
+   Licht en rustig: de facilitator staat in een drukke bar en moet aflezen,
+   niet sfeer proeven. De sfeer zit bij de deelnemer.
+   Deelnemer-tokens staan apart in src/theme/participant.js
    ============================================================ */
 
 :root {
@@ -11,24 +12,25 @@
   --teal:   #2e6b5a;
   --yellow: #facc15;
 
-  /* Afgeleide UI-tokens */
-  --surface:      #111111;
-  --surface-2:    #1c1c1c;
-  --border:       #2a2a2a;
-  --text:         #ffffff;
-  --text-muted:   #9ca3af;
+  /* Licht UI-palet */
+  --bg:         #f6f6f3;
+  --surface:    #ffffff;
+  --surface-2:  #eeeeea;
+  --border:     #e0e0d9;
+  --text:       #111111;
+  --text-muted: #6b7280;
 
-  --teal-soft:    rgba(46, 107, 90, 0.18);
-  --yellow-soft:  rgba(250, 204, 21, 0.14);
-  --danger:       #e5484d;
-  --danger-soft:  rgba(229, 72, 77, 0.14);
+  --teal-soft:   rgba(46, 107, 90, 0.10);
+  --yellow-soft: rgba(250, 204, 21, 0.22);
+  --danger:      #c1272d;
+  --danger-soft: #fdf0f0;
 
   --font-head: 'Jost', 'Futura', -apple-system, sans-serif;
   --font-body: 'Open Sans', -apple-system, BlinkMacSystemFont, sans-serif;
 
   --radius:    10px;
   --radius-lg: 14px;
-  --shadow:    0 1px 3px rgba(0, 0, 0, 0.4);
+  --shadow:    0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -37,7 +39,7 @@ html, body, #root { height: 100%; }
 
 body {
   font-family: var(--font-body);
-  background: var(--black);
+  background: var(--bg);
   color: var(--text);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -63,12 +65,12 @@ button {
   padding: 0.65rem 1.2rem;
   transition: filter 0.15s ease, opacity 0.15s ease;
 }
-button:hover:not(:disabled) { filter: brightness(1.15); }
+button:hover:not(:disabled) { filter: brightness(1.1); }
 button:disabled { opacity: 0.45; cursor: not-allowed; }
 button:focus-visible,
 input:focus-visible,
 select:focus-visible {
-  outline: 2px solid var(--yellow);
+  outline: 2px solid var(--teal);
   outline-offset: 2px;
 }
 
@@ -78,7 +80,7 @@ input, select {
   padding: 0.6rem 0.8rem;
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  background: var(--surface-2);
+  background: var(--surface);
   color: var(--text);
   width: 100%;
 }
@@ -87,9 +89,9 @@ input:focus, select:focus {
   border-color: var(--teal);
   box-shadow: 0 0 0 3px var(--teal-soft);
 }
-input::placeholder { color: #6b7280; }
+input::placeholder { color: #9ca3af; }
 
-/* Het O'Learys-wordmark is zwart. Op donkere vlakken keren we hem om. */
+/* Het O'Learys-wordmark is zwart. Op donkere vlakken keren we hem om naar wit. */
 .logo-invert { filter: invert(1); }
 
 @media (prefers-reduced-motion: reduce) {

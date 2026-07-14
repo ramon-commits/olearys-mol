@@ -36,7 +36,7 @@ export default function Login() {
   return (
     <div style={s.page}>
       <form style={s.card} onSubmit={submit}>
-        <img src="/olearys-logo.png" alt="O'Learys" className="logo-invert" style={s.logo} />
+        <img src="/olearys-logo.png" alt="O'Learys" style={s.logo} />
 
         <h1 style={s.title}>I mol O&apos;Learys</h1>
         <p style={s.sub}>Log in om een spel te starten.</p>
@@ -80,7 +80,7 @@ const s = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    background: 'var(--black)',
+    background: 'var(--bg)',
     padding: 20,
   },
   card: {
@@ -99,7 +99,7 @@ const s = {
     fontSize: 30,
     fontWeight: 700,
     textAlign: 'center',
-    color: 'var(--yellow)',
+    color: 'var(--text)',
     letterSpacing: '-0.02em',
   },
   sub: {
@@ -112,9 +112,9 @@ const s = {
   label: { display: 'block', fontSize: 13, fontWeight: 600, marginBottom: 6 },
   error: {
     marginTop: 14,
-    color: '#fca5a5',
+    color: 'var(--danger)',
     background: 'var(--danger-soft)',
-    border: '1px solid rgba(229,72,77,0.35)',
+    border: '1px solid #f3c9c9',
     borderRadius: 'var(--radius)',
     padding: '0.6rem 0.75rem',
     fontSize: 13,

@@ -1,23 +1,28 @@
-// Deelnemerschermen: donkere noir mol-sfeer.
-// Bewust een ANDER palet dan het facilitator-dashboard: de deelnemer moet het
-// gevoel krijgen dat hij een spel binnenstapt, niet een beheertool.
-// O'Learys blijft aanwezig via het logo onderaan en het geel van de mol.
+// Deelnemerschermen: O'Learys Sunburst Yellow.
+// Bewust een ANDER palet dan het facilitator-dashboard: de deelnemer stapt een
+// spel binnen, niet een beheertool. Fel, luid, onmiskenbaar O'Learys.
+//
+// De twee rolkaarten breken juist WEG van dat geel, want dat is het moment:
+//   speler -> teal
+//   mol    -> jet black
+// Op een felgele wereld is een volledig zwart scherm de sterkste onthulling
+// die je kunt geven.
 
 export const p = {
-  ink: '#041214',        // achtergrond
-  green: '#00995f',      // speler, bevestiging, primaire knop
-  yellow: '#facc15',     // de mol, highlights
+  yellow: '#facc15',   // achtergrond deelnemerwereld
+  ink: '#000000',      // tekst, knoppen, de mol
+  teal: '#2e6b5a',     // speler, accenten
   white: '#ffffff',
-  muted: 'rgba(255, 255, 255, 0.62)',
-  line: 'rgba(255, 255, 255, 0.14)',
-  field: 'rgba(255, 255, 255, 0.06)',
+  muted: 'rgba(0, 0, 0, 0.62)',
+  line: 'rgba(0, 0, 0, 0.14)',
+  field: 'rgba(255, 255, 255, 0.55)',
 };
 
 export const px = {
   screen: {
     minHeight: '100vh',
-    background: p.ink,
-    color: p.white,
+    background: p.yellow,
+    color: p.ink,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -42,17 +47,17 @@ export const px = {
     padding: '16px 20px',
     borderRadius: 12,
     border: 'none',
-    background: p.green,
-    color: p.white,
+    background: p.ink,
+    color: p.yellow,
     fontSize: 17,
     fontWeight: 700,
     cursor: 'pointer',
     marginTop: 8,
   },
-  btnDisabled: { opacity: 0.45, cursor: 'not-allowed' },
+  btnDisabled: { opacity: 0.35, cursor: 'not-allowed' },
 
   field: { textAlign: 'left', marginBottom: 18 },
-  label: { display: 'block', fontSize: 14, fontWeight: 600, marginBottom: 8, color: p.white },
+  label: { display: 'block', fontSize: 14, fontWeight: 700, marginBottom: 8, color: p.ink },
   input: {
     width: '100%',
     padding: '14px 16px',
@@ -60,7 +65,7 @@ export const px = {
     fontSize: 16,
     border: `1px solid ${p.line}`,
     background: p.field,
-    color: p.white,
+    color: p.ink,
     boxSizing: 'border-box',
     outline: 'none',
   },
@@ -70,8 +75,8 @@ export const px = {
     borderRadius: 10,
     fontSize: 16,
     border: `1px solid ${p.line}`,
-    background: '#0b2024',
-    color: p.white,
+    background: p.field,
+    color: p.ink,
     boxSizing: 'border-box',
     outline: 'none',
     appearance: 'none',
@@ -82,16 +87,27 @@ export const px = {
     height: 44,
     borderRadius: '50%',
     border: `4px solid ${p.line}`,
-    borderTopColor: p.white,
+    borderTopColor: p.ink,
     animation: 'p-spin 0.8s linear infinite',
   },
 
+  // Logo staat DONKER op geel: geen invert.
   footerLogo: {
     width: 92,
     height: 'auto',
-    opacity: 0.5,
+    opacity: 0.75,
     margin: '38px auto 0',
     display: 'block',
+  },
+
+  eyebrow: {
+    fontFamily: 'var(--font-head)',
+    fontSize: 12,
+    fontWeight: 700,
+    letterSpacing: '0.16em',
+    textTransform: 'uppercase',
+    color: p.teal,
+    marginBottom: 12,
   },
 };
 

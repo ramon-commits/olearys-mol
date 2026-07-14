@@ -35,7 +35,7 @@ export default function Sidebar() {
   return (
     <aside style={s.sidebar}>
       <div style={s.brand}>
-        <img src="/olearys-logo.png" alt="O'Learys" className="logo-invert" style={s.logo} />
+        <img src="/olearys-logo.png" alt="O'Learys" style={s.logo} />
         <div style={s.wordmark}>I mol O&apos;Learys</div>
       </div>
 
@@ -70,7 +70,7 @@ const s = {
   sidebar: {
     width: 230,
     minWidth: 230,
-    background: 'var(--black)',
+    background: 'var(--surface)',
     borderRight: '1px solid var(--border)',
     height: '100vh',
     position: 'sticky',
@@ -96,7 +96,7 @@ const s = {
     fontWeight: 700,
     letterSpacing: '0.08em',
     textTransform: 'uppercase',
-    color: '#6b7280',
+    color: 'var(--text-muted)',
     padding: '0 8px 8px',
   },
   navItem: {
@@ -114,7 +114,8 @@ const s = {
   },
   navItemActive: {
     background: 'var(--teal-soft)',
-    color: 'var(--white)',
+    color: 'var(--teal)',
+    fontWeight: 600,
     boxShadow: 'inset 2px 0 0 var(--teal)',
   },
   footer: { borderTop: '1px solid var(--border)', paddingTop: 14 },

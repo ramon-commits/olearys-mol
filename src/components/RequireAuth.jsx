@@ -26,7 +26,7 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    background: 'var(--black)',
+    background: 'var(--bg)',
   },
   spinner: {
     width: 36,

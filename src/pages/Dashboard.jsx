@@ -1,15 +1,18 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { supabase } from '../lib/supabase.js';
 import { fetchGameOverview } from '../lib/game.js';
+import QuestionEditor from './QuestionEditor.jsx';
 
-// /dashboard - facilitator. Spel aanmaken, live volgen, fases doorzetten,
-// iPad-scores invoeren. Dit is het enige scherm waar de mol zichtbaar is.
+// /dashboard          -> lijst
+// /dashboard/:gameId  -> direct dat spel open (zo komt de terug-knop van QR
+//                         netjes terug in het spel in plaats van in de lijst)
 export default function Dashboard() {
   const navigate = useNavigate();
+  const { gameId } = useParams();
   const [loading, setLoading] = useState(true);
   const [games, setGames] = useState([]);
-  const [view, setView] = useState('list'); // list | create | detail
+  const [view, setView] = useState('list'); // list | create | detail | questions
   const [overview, setOverview] = useState(null);
 
   const loadGames = useCallback(async () => {
@@ -23,19 +26,31 @@ export default function Dashboard() {
 
   const openGame = useCallback(async (id) => {
     const ov = await fetchGameOverview(id);
-    if (!ov) { await loadGames(); setView('list'); return; }
+    if (!ov) { await loadGames(); setView('list'); navigate('/dashboard'); return; }
     setOverview(ov);
     setView('detail');
-  }, [loadGames]);
+  }, [loadGames, navigate]);
 
-  // Eenmalige data-load bij mount. De setState zit in de async callback,
-  // niet in de effect-body zelf.
   // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { loadGames(); }, [loadGames]);
+
+  // Als er een gameId in de URL staat, open dat spel automatisch.
+  /* eslint-disable react-hooks/set-state-in-effect */
+  useEffect(() => {
+    if (gameId) {
+      openGame(gameId);
+    } else {
+      setView((v) => (v === 'detail' ? 'list' : v));
+      setOverview(null);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gameId]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   function backToList() {
     setOverview(null);
     setView('list');
+    navigate('/dashboard');
     loadGames();
   }
 
@@ -45,7 +60,16 @@ export default function Dashboard() {
     return (
       <CreateGame
         onCancel={() => setView('list')}
-        onCreated={async (id) => { await loadGames(); await openGame(id); }}
+        onCreated={async (id) => { await loadGames(); navigate(`/dashboard/${id}`); }}
+      />
+    );
+  }
+
+  if (view === 'questions' && overview) {
+    return (
+      <QuestionEditor
+        game={overview.game}
+        onBack={() => openGame(overview.game.id)}
       />
     );
   }
@@ -56,12 +80,13 @@ export default function Dashboard() {
         overview={overview}
         reload={() => openGame(overview.game.id)}
         onBack={backToList}
+        onEditQuestions={() => setView('questions')}
         navigate={navigate}
       />
     );
   }
 
-  return <GameList games={games} onOpen={openGame} onNew={() => setView('create')} onReload={loadGames} />;
+  return <GameList games={games} onOpen={(id) => navigate(`/dashboard/${id}`)} onNew={() => setView('create')} onReload={loadGames} />;
 }
 
 // ============================================================
@@ -126,6 +151,7 @@ function CreateGame({ onCreated, onCancel }) {
   const [name, setName] = useState('');
   const [numTeams, setNumTeams] = useState(4);
   const [maxPerTeam, setMaxPerTeam] = useState(8);
+  const [unmaskPoints, setUnmaskPoints] = useState(50);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
 
@@ -141,6 +167,7 @@ function CreateGame({ onCreated, onCancel }) {
         name: name.trim(),
         num_teams: numTeams,
         max_per_team: maxPerTeam,
+        unmask_points: Math.max(0, parseInt(unmaskPoints, 10) || 0),
         active_phase: 0,
         status: 'active',
       })
@@ -148,6 +175,10 @@ function CreateGame({ onCreated, onCancel }) {
       .single();
 
     if (err) { setError(err.message); setBusy(false); return; }
+
+    // Vul het nieuwe spel met de 8 standaardvragen, zodat je niet leeg begint.
+    await supabase.rpc('mol_seed_default_questions', { p_game_id: data.id });
+
     await onCreated(data.id);
   }
 
@@ -179,12 +210,23 @@ function CreateGame({ onCreated, onCancel }) {
             onChange={(e) => setMaxPerTeam(clamp(e.target.value, 2, 10))}
           />
         </Field>
+        <Field label="Punten voor de ontmaskering (check-in 4)">
+          <input
+            type="number" min={0} max={500} value={unmaskPoints} disabled={busy}
+            onChange={(e) => setUnmaskPoints(e.target.value)}
+          />
+          <div style={st.hint}>
+            Wie de mol juist aanwijst levert dit op. Blijft de mol onontdekt, dan
+            krijgt zijn team dit bedrag.
+          </div>
+        </Field>
 
         {error && <div style={st.error}>{error}</div>}
 
         <button type="submit" disabled={busy} style={{ marginTop: 8 }}>
           {busy ? 'Bezig…' : 'Spel starten'}
         </button>
+        <p style={st.hint}>Je vult de app met de 8 standaardvragen. Aanpassen kan daarna.</p>
       </form>
     </div>
   );
@@ -193,7 +235,7 @@ function CreateGame({ onCreated, onCancel }) {
 // ============================================================
 // Live spel
 // ============================================================
-function LiveGame({ overview, reload, onBack, navigate }) {
+function LiveGame({ overview, reload, onBack, onEditQuestions, navigate }) {
   const { game, players, checkin_votes, ipad_scores } = overview;
   const [busy, setBusy] = useState(false);
   const [ipad, setIpad] = useState(ipad_scores || {});
@@ -356,6 +398,7 @@ function LiveGame({ overview, reload, onBack, navigate }) {
 
       <div style={st.bottom}>
         <button onClick={() => navigate(`/qr-codes/${game.id}`)} style={st.secondary}>QR codes</button>
+        <button onClick={onEditQuestions} style={st.secondary}>Vragenlijst aanpassen</button>
         {game.active_phase === 5 && (
           <button onClick={() => setPhase(1)} disabled={busy} style={st.secondary}>
             Terug naar check-ins
@@ -424,6 +467,7 @@ const st = {
   h1: { fontSize: 27 },
   h2: { fontSize: 17, marginTop: 34, marginBottom: 14 },
   muted: { fontSize: 14, color: 'var(--text-muted)', marginTop: 4 },
+  hint: { fontSize: 12, color: 'var(--text-muted)', marginTop: 8, lineHeight: 1.4 },
   card: {
     background: 'var(--surface)',
     border: '1px solid var(--border)',

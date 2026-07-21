@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '../../lib/supabase.js';
-import { fetchActiveGame, storedToken, rememberPlayer } from '../../lib/game.js';
-import { QUESTIONS, allAnswered } from '../../lib/questions.js';
+import { fetchActiveGame, fetchQuestions, storedToken, rememberPlayer } from '../../lib/game.js';
 import ParticipantScreen from '../../components/ParticipantScreen.jsx';
 import { px } from '../../theme/participant.js';
 
 // /scan/:team - deelnemer scant de QR op zijn teamtafel.
-// Fase 0: naam + 8 vragen over jezelf -> mol_claim_position -> rolkaart.
+// Fase 0: naam + de vragen van dit spel (over jezelf) -> mol_claim_position -> rolkaart.
+// De vragen komen uit de database, want de facilitator kan ze per event aanpassen.
 export default function Scan() {
   const { team } = useParams();
   const navigate = useNavigate();
@@ -16,6 +16,7 @@ export default function Scan() {
   const [phase, setPhase] = useState('loading');
   // loading | waiting | closed | invalid | welcome | form | full | error
   const [game, setGame] = useState(null);
+  const [questions, setQuestions] = useState([]);
   const [name, setName] = useState('');
   const [answers, setAnswers] = useState({});
   const [busy, setBusy] = useState(false);
@@ -34,6 +35,10 @@ export default function Scan() {
 
       setGame(g);
       if (storedToken(g.id)) { navigate('/card', { replace: true }); return; }
+
+      const qs = await fetchQuestions(g.id);
+      if (!active) return;
+      setQuestions(qs);
       setPhase(g.active_phase === 0 ? 'welcome' : 'closed');
     })();
     return () => { active = false; };
@@ -43,9 +48,11 @@ export default function Scan() {
     setAnswers((prev) => ({ ...prev, [key]: value }));
   }
 
+  const allAnswered = questions.length > 0 && questions.every((q) => answers[q.qkey]);
+
   async function submit(e) {
     e.preventDefault();
-    if (!name.trim() || !allAnswered(answers) || busy) return;
+    if (!name.trim() || !allAnswered || busy) return;
     setBusy(true);
 
     const { data, error } = await supabase.rpc('mol_claim_position', {
@@ -94,14 +101,14 @@ export default function Scan() {
         <div style={px.eyebrow}>Team {teamNumber}</div>
         <h1 style={{ ...px.title, fontSize: 46 }}>I mol O&apos;Learys</h1>
         <p style={px.sub}>
-          Eén van jullie is de mol. Vul eerst acht vragen over jezelf in, dan hoor je wie je bent.
+          Eén van jullie is de mol. Vul eerst een paar vragen over jezelf in, dan hoor je wie je bent.
         </p>
         <button style={px.btn} onClick={() => setPhase('form')}>Ik doe mee</button>
       </ParticipantScreen>
     );
   }
 
-  const canSubmit = name.trim() && allAnswered(answers) && !busy;
+  const canSubmit = name.trim() && allAnswered && !busy;
 
   return (
     <ParticipantScreen>
@@ -124,14 +131,14 @@ export default function Scan() {
           />
         </div>
 
-        {QUESTIONS.map((q) => (
-          <div style={px.field} key={q.key}>
-            <label style={px.label} htmlFor={q.key}>{q.self}</label>
+        {questions.map((q) => (
+          <div style={px.field} key={q.qkey}>
+            <label style={px.label} htmlFor={q.qkey}>{q.self_text}</label>
             <select
-              id={q.key}
+              id={q.qkey}
               style={px.select}
-              value={answers[q.key] || ''}
-              onChange={(e) => setAnswer(q.key, e.target.value)}
+              value={answers[q.qkey] || ''}
+              onChange={(e) => setAnswer(q.qkey, e.target.value)}
               disabled={busy}
               required
             >
@@ -152,4 +159,3 @@ export default function Scan() {
     </ParticipantScreen>
   );
 }
-

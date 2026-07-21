@@ -63,7 +63,7 @@ export default function QRCodes() {
       <style>{PRINT_CSS}</style>
 
       <div className="qr-screen">
-        <button onClick={() => navigate('/dashboard')} style={styles.back}>← Terug</button>
+        <button onClick={() => navigate(`/dashboard/${gameId}`)} style={styles.back}>← Terug naar spel</button>
 
         <div style={styles.head}>
           <div>

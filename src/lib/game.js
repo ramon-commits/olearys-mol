@@ -55,3 +55,17 @@ export async function fetchGameOverview(gameId) {
   if (error || !data || data.error) return null;
   return data;
 }
+
+// Vragen van een spel ophalen (voor registratie). Openbaar leesbaar.
+export async function fetchQuestions(gameId) {
+  const { data, error } = await supabase
+    .from('mol_questions')
+    .select('id, qkey, self_text, mol_text, options, sort_order')
+    .eq('game_id', gameId)
+    .order('sort_order');
+  if (error) return [];
+  return (data ?? []).map((q) => ({
+    ...q,
+    options: Array.isArray(q.options) ? q.options : [],
+  }));
+}

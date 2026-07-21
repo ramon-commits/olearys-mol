@@ -37,6 +37,7 @@ export default function App() {
           <Route path="/" element={<Login />} />
 
           <Route path="/dashboard" element={<Admin><Dashboard /></Admin>} />
+          <Route path="/dashboard/:gameId" element={<Admin><Dashboard /></Admin>} />
           <Route path="/qr-codes/:gameId" element={<Admin><QRCodes /></Admin>} />
 
           <Route path="/scan/:team" element={<Scan />} />
